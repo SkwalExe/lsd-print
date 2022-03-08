@@ -133,7 +133,7 @@ fn main() {
 fn drug_print(text: &String, bg: bool, colors: &str) {
     let mut color_text = String::new();
     for c in text.chars() {
-        let mut color = String::new();
+        let color: String;
         if colors == "256" {
             color = format!(
                 "\x1b[{};5;{}m",
