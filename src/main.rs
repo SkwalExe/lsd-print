@@ -78,7 +78,7 @@ fn main() {
             drug_print(&unescape(&input).unwrap(), background.clone(), &colors);
         },
         "print" => {
-            drug_print(&text, false, &"8");
+            drug_print(&text, background.clone(), &colors);
         }
         "version" => println!(
             "{}lsd-print, by Skwal => {}{}{}",
