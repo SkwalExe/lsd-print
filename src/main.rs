@@ -1,8 +1,6 @@
 // Author : SkwalExe
 // Github : https://github.com/SkwalExe
 
-#![allow(dead_code)]
-
 use rand::Rng;
 use snailquote::unescape;
 use std::io;
@@ -148,6 +146,7 @@ fn drug_print(text: &String, bg: bool, colors: &str) {
                     2 => BG_YELLOW.to_string(),
                     4 => BG_MAGENTA.to_string(),
                     5 => BG_CYAN.to_string(),
+                    3 => BG_BLUE.to_string(),
                     _ => BG_RED.to_string(),
                 }
             } else {
