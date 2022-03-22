@@ -3,7 +3,7 @@
 
 use rand::Rng;
 use snailquote::unescape;
-use std::io;
+use std::io::{self, BufRead};
 use std::process;
 
 const RED: &str = "\x1b[91m";
@@ -76,7 +76,7 @@ fn drug_print(text: &String, background: bool, colors256: bool) {
 fn main() {
     let mut colors256 = false; // if the colors should be in the 256 colors
     let mut background = false; // if the colors should be in the background
-    let mut command = "pipe"; // command to execute (pipe, print, version, help)
+    let mut command = "print"; // command to execute (print, version, help)
     let mut text = String::new(); // the text to print
     let mut args: Vec<String> = std::env::args().collect(); // arguments vector
     args.remove(0); // remove the program name
@@ -118,21 +118,28 @@ fn main() {
     }
 
     match command {
-        "pipe" => loop {
-            // read from pipe
-            // the mothod to read from stdin will be improved in the next version
-            let mut input = String::new();
-            io::stdin()
-                .read_line(&mut input)
-                .expect("failed to read from pipe");
-            input = input.trim().to_string();
-            if input == "" {
-                break;
-            }
-            drug_print(&unescape(&input).unwrap(), background.clone(), colors256);
-            // print the readed line
-        },
         "print" => {
+            if text.is_empty() {
+                // if no text is directly given
+                let stdin = io::stdin();
+                let lines = stdin.lock().lines();
+
+                let mut line_count = 0;
+
+                for line in lines {
+                    // try to read from pipe
+                    line_count += 1;
+                    let line = line.expect("Could not read line from standard in");
+                    drug_print(&unescape(&line).unwrap(), background.clone(), colors256);
+                }
+
+                if line_count == 0 {
+                    // if there is no text being piped into the program
+                    println!("{}No text specified{}", RED, RESET);
+                    process::exit(1);
+                }
+            }
+
             drug_print(&text, background.clone(), colors256);
 
             // just lsd-print the text
