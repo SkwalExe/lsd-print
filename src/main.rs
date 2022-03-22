@@ -21,27 +21,81 @@ const BG_BLUE: &str = "\x1b[44m";
 const BG_MAGENTA: &str = "\x1b[45m";
 const BG_CYAN: &str = "\x1b[46m";
 
+// this function will print a message with random colors
+//
+// parameters
+// - text           : the message to print
+// - background     : if the color should be in the background
+// - color256       : if the color should be in the 256 colors
+//
+//
+
+fn drug_print(text: &String, background: bool, colors256: bool) {
+    let mut colored_text = String::new();
+
+    for c in text.chars() {
+        let color: String; // the color to use for the character
+        if colors256 {
+            color = format!(
+                "\x1b[{};5;{}m",
+                if background { "48" } else { "38" },
+                rand::thread_rng().gen_range(0..231)
+            );
+        } else {
+            if background {
+                color = match rand::thread_rng().gen_range(0..6) {
+                    0 => BG_RED.to_string(),
+                    1 => BG_GREEN.to_string(),
+                    2 => BG_YELLOW.to_string(),
+                    4 => BG_MAGENTA.to_string(),
+                    5 => BG_CYAN.to_string(),
+                    3 => BG_BLUE.to_string(),
+                    _ => BG_RED.to_string(),
+                }
+            } else {
+                color = match rand::thread_rng().gen_range(0..6) {
+                    0 => RED.to_string(),
+                    1 => GREEN.to_string(),
+                    2 => YELLOW.to_string(),
+                    3 => BLUE.to_string(),
+                    4 => MAGENTA.to_string(),
+                    5 => CYAN.to_string(),
+                    _ => RESET.to_string(),
+                };
+            }
+        }
+
+        colored_text.push_str(&color); // add the color to the colored text
+        colored_text.push(c); // then push the character
+        colored_text.push_str(RESET); // and reset the color
+    }
+
+    println!("{}", colored_text); // and print the colored text
+}
+
 fn main() {
-    let mut colors = "8";
-    let mut background = false;
-    let mut command = "pipe";
-    let mut text = String::new();
-    let mut args: Vec<String> = std::env::args().collect();
-    args.remove(0);
+    let mut colors256 = false; // if the colors should be in the 256 colors
+    let mut background = false; // if the colors should be in the background
+    let mut command = "pipe"; // command to execute (pipe, print, version, help)
+    let mut text = String::new(); // the text to print
+    let mut args: Vec<String> = std::env::args().collect(); // arguments vector
+    args.remove(0); // remove the program name
 
     while args.len() > 0 {
         match args[0].as_str() {
             "--" => {
                 command = "print";
                 args.remove(0);
-                text = args.join(" ");
-                break;
+                text = args.join(" "); // the text to print is set the everything after --
+                break; // stop parsing arguments
             }
             "-256" => {
-                colors = "256";
+                // enables 256 colors
+                colors256 = true;
                 args.remove(0);
             }
             "-b" | "--background" => {
+                // put the color in the background
                 background = true;
                 args.remove(0);
             }
@@ -65,6 +119,8 @@ fn main() {
 
     match command {
         "pipe" => loop {
+            // read from pipe
+            // the mothod to read from stdin will be improved in the next version
             let mut input = String::new();
             io::stdin()
                 .read_line(&mut input)
@@ -73,10 +129,13 @@ fn main() {
             if input == "" {
                 break;
             }
-            drug_print(&unescape(&input).unwrap(), background.clone(), &colors);
+            drug_print(&unescape(&input).unwrap(), background.clone(), colors256);
+            // print the readed line
         },
         "print" => {
-            drug_print(&text, background.clone(), &colors);
+            drug_print(&text, background.clone(), colors256);
+
+            // just lsd-print the text
         }
         "version" => println!(
             "{}lsd-print, by Skwal => {}{}{}",
@@ -86,7 +145,7 @@ fn main() {
             RESET
         ),
         "help" => {
-            drug_print(&String::from("LSD print"), false, &"8");
+            drug_print(&String::from("LSD print"), false, false);
             println!("{}━━━━━━━━━━━━━━━━━{}", MAGENTA, RESET);
             println!("Author: {}SkwalExe{}", MAGENTA, RESET);
             println!("Github: {}https://github.com/SkwalExe{}", MAGENTA, RESET);
@@ -94,7 +153,7 @@ fn main() {
             drug_print(
                 &String::from("Just a print tool, but we gave it lsd"),
                 false,
-                &"8",
+                false,
             );
             println!("{}━━━━━━━━━━━━━━━━━{}", MAGENTA, RESET);
             println!("Options : ");
@@ -127,44 +186,4 @@ fn main() {
 
         _ => {}
     }
-}
-fn drug_print(text: &String, bg: bool, colors: &str) {
-    let mut color_text = String::new();
-    for c in text.chars() {
-        let color: String;
-        if colors == "256" {
-            color = format!(
-                "\x1b[{};5;{}m",
-                if bg { "48" } else { "38" },
-                rand::thread_rng().gen_range(0..231)
-            );
-        } else {
-            if bg {
-                color = match rand::thread_rng().gen_range(0..6) {
-                    0 => BG_RED.to_string(),
-                    1 => BG_GREEN.to_string(),
-                    2 => BG_YELLOW.to_string(),
-                    4 => BG_MAGENTA.to_string(),
-                    5 => BG_CYAN.to_string(),
-                    3 => BG_BLUE.to_string(),
-                    _ => BG_RED.to_string(),
-                }
-            } else {
-                color = match rand::thread_rng().gen_range(0..6) {
-                    0 => RED.to_string(),
-                    1 => GREEN.to_string(),
-                    2 => YELLOW.to_string(),
-                    3 => BLUE.to_string(),
-                    4 => MAGENTA.to_string(),
-                    5 => CYAN.to_string(),
-                    _ => RESET.to_string(),
-                };
-            }
-        }
-
-        color_text.push_str(&color);
-        color_text.push(c);
-        color_text.push_str(RESET);
-    }
-    println!("{}", color_text);
 }
