@@ -16,6 +16,17 @@ yay -S lsd-print
 
 ## Other distributions
 
+### With make
+
+Run make
+
+```bash
+# 📂 lsd-print/
+make
+```
+
+### Or
+
 **Clone this repo**
 
 ```bash
@@ -49,6 +60,17 @@ la | lsd-print -b
 ![](images/3.png)
 
 # Uninstall 🗑
+
+## With make
+
+Run make uninstall
+
+```bash
+# 📂 help-ukraine/
+make uninstall
+```
+
+## Or
 
 Just remove the binary
 
