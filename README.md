@@ -59,6 +59,21 @@ la | lsd-print -b
 
 ![](images/3.png)
 
+# Docker 🐳
+
+### Build 🛠️
+
+```bash
+# 📂 lsd-print/
+docker build -t lsd-print .
+```
+
+### Run 🏃
+
+```bash
+docker run --rm -it lsd-print [OPTIONS]
+```
+
 # Uninstall 🗑
 
 ## With make
