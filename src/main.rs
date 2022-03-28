@@ -190,6 +190,10 @@ fn main() {
                 MAGENTA, YELLOW, RESET
             );
             println!(
+                "\t{}--nonewline, -n: {}Prints without a newline{}",
+                MAGENTA, YELLOW, RESET
+            );
+            println!(
                 "{}\tprogram | lsd-print: {}Prints the output of program{}",
                 MAGENTA, YELLOW, RESET
             );
