@@ -70,13 +70,14 @@ fn drug_print(text: &String, background: bool, colors256: bool) {
         colored_text.push_str(RESET); // and reset the color
     }
 
-    println!("{}", colored_text); // and print the colored text
+    print!("{}", colored_text); // and print the colored text
 }
 
 fn main() {
     let mut colors256 = false; // if the colors should be in the 256 colors
     let mut background = false; // if the colors should be in the background
     let mut command = "print"; // command to execute (print, version, help)
+    let mut newline = true; // if a newline should be printed after the message
     let mut text = String::new(); // the text to print
     let mut args: Vec<String> = std::env::args().collect(); // arguments vector
     args.remove(0); // remove the program name
@@ -101,6 +102,10 @@ fn main() {
             }
             "--version" | "-v" => {
                 command = "version";
+                args.remove(0);
+            }
+            "--nonewline" | "-n" => {
+                newline = false;
                 args.remove(0);
             }
             "--help" | "-h" => {
@@ -140,7 +145,11 @@ fn main() {
                 }
             }
 
-            drug_print(&text, background.clone(), colors256);
+            drug_print(
+                &format!("{}{}", text, if newline { "\n" } else { " " }),
+                background.clone(),
+                colors256,
+            );
 
             // just lsd-print the text
         }
