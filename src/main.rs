@@ -2,7 +2,6 @@
 // Github : https://github.com/SkwalExe
 
 use rand::Rng;
-use snailquote::unescape;
 use std::io::{self, BufRead};
 use std::process;
 
@@ -27,10 +26,10 @@ const BG_CYAN: &str = "\x1b[46m";
 // - text           : the message to print
 // - background     : if the color should be in the background
 // - color256       : if the color should be in the 256 colors
-//
+// - newline        : if the message should be printed with a newline
 //
 
-fn drug_print(text: &String, background: bool, colors256: bool) {
+fn drug_print(text: &String, background: bool, colors256: bool, newline: bool) {
     let mut colored_text = String::new();
 
     for c in text.chars() {
@@ -70,7 +69,7 @@ fn drug_print(text: &String, background: bool, colors256: bool) {
         colored_text.push_str(RESET); // and reset the color
     }
 
-    print!("{}", colored_text); // and print the colored text
+    print!("{}{}", colored_text, if newline { "\n" } else { "" }); // and print the colored text
 }
 
 fn main() {
@@ -135,7 +134,7 @@ fn main() {
                     // try to read from pipe
                     line_count += 1;
                     let line = line.expect("Could not read line from standard in");
-                    drug_print(&unescape(&line).unwrap(), background.clone(), colors256);
+                    drug_print(&line, background.clone(), colors256, newline.clone());
                 }
 
                 if line_count == 0 {
@@ -145,11 +144,7 @@ fn main() {
                 }
             }
 
-            drug_print(
-                &format!("{}{}", text, if newline { "\n" } else { " " }),
-                background.clone(),
-                colors256,
-            );
+            drug_print(&text, background.clone(), colors256, newline.clone());
 
             // just lsd-print the text
         }
@@ -161,7 +156,7 @@ fn main() {
             RESET
         ),
         "help" => {
-            drug_print(&String::from("LSD print"), false, false);
+            drug_print(&String::from("LSD print"), false, false, true);
             println!("{}━━━━━━━━━━━━━━━━━{}", MAGENTA, RESET);
             println!("Author: {}SkwalExe{}", MAGENTA, RESET);
             println!("Github: {}https://github.com/SkwalExe{}", MAGENTA, RESET);
@@ -170,6 +165,7 @@ fn main() {
                 &String::from("Just a print tool, but we gave it lsd"),
                 false,
                 false,
+                true,
             );
             println!("{}━━━━━━━━━━━━━━━━━{}", MAGENTA, RESET);
             println!("Options : ");
