@@ -6,7 +6,7 @@
 
 # Installation 📦
 
-## Arch Linux
+## Arch Linux 🐧
 
 lsd-print is in the AUR
 
@@ -14,9 +14,9 @@ lsd-print is in the AUR
 yay -S lsd-print
 ```
 
-## Other distributions
+## Other 🪟🐧
 
-### With make
+### With make - Linux 🐧
 
 Run make
 
@@ -25,7 +25,7 @@ Run make
 make
 ```
 
-### Or
+### Build from source - Linux 🐧 & Windows 🪟
 
 **Clone this repo**
 
@@ -40,12 +40,14 @@ build with [cargo](https://doc.rust-lang.org/cargo/getting-started/installation.
 cargo build --release
 ```
 
-Move the binary
+**[ LINUX ONLY ] :** Move the binary
 
 ```bash
 # 📂 lsd-print/
 sudo cp target/release/lsd-print /usr/bin/lsd-print
 ```
+
+**On windows** the executable will be `target\release\lsd-print.exe` you can move it wherever you want.
 
 # Usage 📝
 
