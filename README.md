@@ -63,6 +63,14 @@ la | lsd-print -b
 
 # Docker 🐳
 
+## Run the latest version
+
+```bash
+docker run --rm -it ghcr.io/skwalexe/typrint:main
+```
+
+## Test your changes 🚧
+
 ### Build 🛠️
 
 ```bash
